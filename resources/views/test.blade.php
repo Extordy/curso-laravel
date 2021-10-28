@@ -81,9 +81,11 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    <?php
-                        echo 'Curso Laravel en Platzi!!!'
-                    ?>
+                    @isset($title)
+                        {{$title}}
+                    @else
+                        {{'No title'}}
+                    @endisset
                 </div>
 
                 <div class="links">
