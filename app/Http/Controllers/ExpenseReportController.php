@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\ExpenseReport;
+use App\Mail\SummaryReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use PhpParser\Node\Expr;
 
 class ExpenseReportController extends Controller
@@ -38,12 +40,13 @@ class ExpenseReportController extends Controller
      */
     public function store(Request $request)
     {
+        //validacion de posible errores
         $validaData = $request->validate([
-            'title'=>'required'
+            'title'=>'required | min:3'
         ]);
 
         $report = new ExpenseReport();
-        $report -> title = $request -> get('title');
+        $report -> title = $validaData['title'];
         $report->save();
 
         return redirect('/expense_reports');
@@ -52,12 +55,15 @@ class ExpenseReportController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  ExpenseReport $expenseReport
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    /**nos muestra y valida le exitencia de los reportes */
+    public function show(ExpenseReport $expenseReport)
     {
-        //
+        return view('expenseReport.show',[
+            'report'=>$expenseReport
+        ]);
     }
 
     /**
@@ -68,6 +74,7 @@ class ExpenseReportController extends Controller
      */
     public function edit($id)
     {
+
         $report = ExpenseReport::findOrFail($id);
         return view('expenseReport.edit',[
             'report' => $report
@@ -83,6 +90,10 @@ class ExpenseReportController extends Controller
      */
     public function update(Request $request, $id)
     {
+        /** calidando request de la actualizacion de un dato  */
+        $validaData = $request->validate([
+            'title'=>'required | min:3'
+        ]);
         $report = ExpenseReport::findOrFail($id);
         $report->title=$request->get('title');
         $report->save();
@@ -109,5 +120,19 @@ class ExpenseReportController extends Controller
         return view('expenseReport.confirmDelete',[
             'report'=>$report
         ]);
+    }
+
+    public function confirmSendMail($id){
+        $report = ExpenseReport::findOrFail($id);
+        return view('expenseReport.confirmSendMail',[
+            'report'=>$report
+        ]);
+    }
+
+    public function sendMail(Request $request,$id){
+        $report = ExpenseReport::find($id);
+        Mail::to($request->ger('email'))->send(new SummaryReport($report));
+
+        return redirect('/expense_reports/'. $id);
     }
 }

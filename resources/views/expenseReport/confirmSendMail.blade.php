@@ -3,12 +3,12 @@
 @section('content')
     <div class="row">
         <div class="col">
-            <h1>Edit Reports {{ $report->id }}</h1>
+            <h1>Send Reports</h1>
         </div>
     </div>
     <div class="row">
         <div class="col">
-
+            <!--se crea la seccion donde se mostrara la alertas -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -23,14 +23,13 @@
     </div>
             <div class="row">
                 <div class="col">
-                    <form action="/expense_reports/{{ $report->id }}" method="POST">
+                    <form action="/expense_reports/{{ $report->id }}/sendMail" method="POST">
                         @csrf
-                        @method('put')
                         <div class="form-grup">
-                            <label for="title">Title:</label>
-                            <input type="text" class="from-control" id="title" name="title" placeholder="Type a title" value="{{ old('title') }}">
+                            <label for="email">Email:</label>
+                            <input type="text" class="from-control" id="email" name="email" placeholder="Type a email" value="{{ old('email') }}">
                         </div>
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-primary" type="submit">Send mail</button>
                     </form>
                 </div>
             </div>

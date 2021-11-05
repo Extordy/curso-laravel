@@ -8,6 +8,7 @@
     </div>
     <div class="row">
         <div class="col">
+            <!--se crea la seccion donde se mostrara la alertas -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -26,7 +27,7 @@
                         @csrf
                         <div class="form-grup">
                             <label for="title">Title:</label>
-                            <input type="text" class="from-control" id="title" name="title" placeholder="Type a title">
+                            <input type="text" class="from-control" id="title" name="title" placeholder="Type a title" value="{{ old('title') }}">
                         </div>
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </form>
